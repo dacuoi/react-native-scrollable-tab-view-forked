@@ -4,6 +4,7 @@ const PropTypes = require("prop-types");
 const createReactClass = require("create-react-class");
 
 const {
+  Image,
   View,
   Animated,
   StyleSheet,
@@ -157,7 +158,7 @@ const ScrollableTabBar = createReactClass({
     }
   },
 
-  renderTab(child, page, isTabActive, onPressHandler, onLayoutHandler) {
+  renderTab(child, icon, iconActive, page, isTabActive, onPressHandler, onLayoutHandler) {
     const {
       activeTextColor,
       inactiveTextColor,
@@ -177,8 +178,11 @@ const ScrollableTabBar = createReactClass({
         onLayout={onLayoutHandler}
       >
         <View style={[styles.tab, this.props.tabStyle]}>
+          <Image
+            style={styles.image}
+            source={isTabActive ? iconActive : icon}/>
           <Text
-            style={[{ color: textColor, fontWeight }, textStyle, atextStyle]}
+            style={[{marginLeft: 10, color: textColor, fontWeight }, textStyle, atextStyle]}
           >
             {child.tabLabel}
           </Text>
@@ -249,10 +253,14 @@ const ScrollableTabBar = createReactClass({
             onLayout={this.onTabContainerLayout}
           >
             {this.props.tabs.map((child, page) => {
+              const icon = this.props.tabsIcon[page];
+              const iconActive = this.props.tabsIconActive[page];
               const isTabActive = this.props.activeTab === page;
               const renderTab = this.props.renderTab || this.renderTab;
               return renderTab(
                 child,
+                icon,
+                iconActive,
                 page,
                 isTabActive,
                 this.props.goToPage,
